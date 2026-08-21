@@ -1,0 +1,452 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model admissions {
+  id            Int      @id @default(autoincrement())
+  title         String
+  category      String?  @default("course-layout")  
+  pdf_name      String?
+  pdf_path      String?
+  uploaded_date DateTime @default(now())
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+}
+
+model Administration {
+  id            Int      @id @default(autoincrement())
+  title         String
+  category      String
+  link          String?  
+  pdf_name      String?
+  pdf_path      String?
+  uploaded_date DateTime @default(now())
+}
+
+model ImportantLink {
+  id        Int      @id @default(autoincrement())
+  title     String
+  url       String
+  createdAt DateTime @default(now())
+}
+
+model Committee {
+  id            Int       @id @default(autoincrement())
+  title         String
+  pdf_name      String?
+  pdf_path      String?
+  uploaded_date DateTime?
+  createdAt     DateTime  @default(now())
+}
+
+model Principal {
+  id             Int      @id @default(autoincrement())
+  name           String
+  designation    String
+  messageTitle   String
+  content        String
+  qualifications String
+  experience     String
+  specialization String
+  email          String
+  mobile         String
+  address        String
+  image_url      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model AdminCard {
+  id         Int      @id @default(autoincrement())
+  name       String
+  title      String
+  noteTitle  String
+  salutation String
+  content    String
+  image_url  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model NcismTab {
+  id        Int            @id @default(autoincrement())
+  title     String
+  createdAt DateTime       @default(now())
+  sections  NcismSection[]
+}
+
+model NcismSection {
+  id    Int        @id @default(autoincrement())
+  title String
+  tabId Int
+  pdfs  NcismPdf[]
+  tab   NcismTab   @relation(fields: [tabId], references: [id], onDelete: Cascade)
+}
+
+model NcismPdf {
+  id           Int          @id @default(autoincrement())
+  name         String
+  pdf_path     String
+  uploadedDate DateTime     @default(now())
+  sectionId    Int
+  section      NcismSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+}
+
+model MuhsTab {
+  id        Int           @id @default(autoincrement())
+  title     String
+  createdAt DateTime      @default(now())
+  sections  MuhsSection[]
+}
+
+model MuhsSection {
+  id    Int       @id @default(autoincrement())
+  title String
+  tabId Int
+  pdfs  MuhsPdf[]
+  tab   MuhsTab   @relation(fields: [tabId], references: [id], onDelete: Cascade)
+}
+
+model MuhsPdf {
+  id           Int         @id @default(autoincrement())
+  name         String
+  pdf_path     String
+  uploadedDate DateTime    @default(now())
+  sectionId    Int
+  section      MuhsSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+}
+
+model Department {
+  id        Int               @id @default(autoincrement())
+  name      String
+  createdAt DateTime          @default(now())
+  details   DepartmentDetail?
+  pdfs      DepartmentPdf[]
+  photos    DepartmentPhoto[]
+  videos    DepartmentVideo[]
+}
+
+model DepartmentDetail {
+  id           Int        @id @default(autoincrement())
+  description  String
+  departmentId Int        @unique
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model DepartmentPdf {
+  id           Int        @id @default(autoincrement())
+  title        String
+  fileName     String
+  fileUrl      String
+  fileSize     String
+  uploadDate   DateTime   @default(now())
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model DepartmentPhoto {
+  id           Int        @id @default(autoincrement())
+  fileName     String
+  photoUrl     String
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model DepartmentVideo {
+  id           Int        @id @default(autoincrement())
+  title        String
+  videoUrl     String
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model HospitalTab {
+  id        Int               @id @default(autoincrement())
+  title     String
+  createdAt DateTime          @default(now())
+  sections  HospitalSection[]
+}
+
+model HospitalSection {
+  id    Int           @id @default(autoincrement())
+  title String
+  tabId Int
+  pdfs  HospitalPdf[]
+  tab   HospitalTab   @relation(fields: [tabId], references: [id], onDelete: Cascade)
+}
+
+model HospitalPdf {
+  id           Int             @id @default(autoincrement())
+  name         String
+  pdfPath      String
+  uploadedDate DateTime        @default(now())
+  sectionId    Int
+  section      HospitalSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+}
+
+model NewsNotice {
+  id         Int      @id @default(autoincrement())
+  title      String
+  type       String
+  fileType   String
+  fileUrl    String?
+  fileName   String?
+  fileSize   String?
+  uploadDate DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model UpcomingEvent {
+  id               Int      @id @default(autoincrement())
+  title            String
+  eventDate        DateTime
+  eventTime        String?
+  location         String?
+  description      String?
+  coverImage       String?
+  additionalImages String[]
+  videos           String[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model HighlightedEvent {
+  id               Int      @id @default(autoincrement())
+  title            String
+  eventDate        DateTime
+  eventTime        String?
+  location         String?
+  description      String?
+  coverImage       String?
+  additionalImages String[]
+  videos           String[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Institute {
+  id        Int      @id @default(autoincrement())
+  title     String
+  imageUrl  String?
+  link      String?  // <-- YEH NAYI LINE ADD KARNI HAI
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inspiration {
+  id          Int      @id @default(1)
+  name        String
+  description String
+  role        String?
+  imageUrl    String?
+  updatedAt   DateTime @updatedAt
+}
+
+model PrincipalData {
+  id          Int      @id @default(1)
+  name        String
+  description String
+  role        String?
+  imageUrl    String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Pillar {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String?
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactInfo {
+  id             Int      @id @default(1)
+  address        String?
+  phone          String?
+  alternatePhone String?
+  email          String?
+  mapLink        String?
+  facebook       String?
+  instagram      String?
+  youtube        String?
+  google         String?
+  whatsapp       String?
+  updatedAt      DateTime @updatedAt
+}
+
+model SliderImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  createdAt DateTime @default(now())
+}
+
+model GalleryVideo {
+  id          Int      @id @default(autoincrement())
+  title       String
+  url         String
+  description String?
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  title     String?
+  createdAt DateTime @default(now())
+}
+
+model NewUpdateTab {
+  id         Int                @id @default(autoincrement())
+  title      String
+  orderIndex Int                @default(0)
+  sections   NewUpdateSection[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+model NewUpdateSection {
+  id         Int              @id @default(autoincrement())
+  title      String
+  orderIndex Int              @default(0)
+  tabId      Int
+  tab        NewUpdateTab     @relation(fields: [tabId], references: [id], onDelete: Cascade)
+  pdfs       NewUpdatePdf[]
+}
+
+model NewUpdatePdf {
+  id         Int              @id @default(autoincrement())
+  name       String
+  pdfPath    String
+  orderIndex Int              @default(0)
+  sectionId  Int
+  section    NewUpdateSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+}
+
+model UniversityDetail {
+  id          Int      @id @default(autoincrement())
+  name        String
+  designation String
+  image       String?
+  noteTitle   String? 
+  noteContent String?  @db.Text 
+  featured    Boolean  @default(false)
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Academic Section 
+model AcademicSection {
+  id          Int            @id @default(autoincrement())
+  type        String         // This will store either "calendar" or "timetable"
+  title       String         // The section title
+  orderIndex  Int            @default(0)
+  files       AcademicFile[] // Relationship to the files inside this section
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+// Academic Files 
+model AcademicFile {
+  id          Int             @id @default(autoincrement())
+  sectionId   Int
+  section     AcademicSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  name        String          // Title entered by user (e.g., "Term 1 Timetable")
+  fileName    String          // Original filename (e.g., "timetable_final.pdf")
+  pdfPath     String          // Server path (e.g., "/assets/academic/12345.pdf")
+  uploadDate  DateTime        @default(now())
+}
+
+model EminentGuest {
+  id          Int      @id @default(autoincrement())
+  name        String
+  designation String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+model Faculty {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String?
+  degree      String?
+  experience  String?
+  imageUrl    String?
+  resumeUrl   String?   
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  type        String   @default("Teaching")
+}
+
+model Student {
+  id            Int      @id @default(autoincrement())
+  title         String
+  category      String
+  link          String?
+  pdf_name      String?
+  pdf_path      String?
+  uploaded_date DateTime @default(now())
+}
+
+model GoverningBody {
+  id            Int      @id @default(autoincrement())
+  title         String
+  pdf_name      String?
+  pdf_path      String?
+  uploaded_date DateTime @default(now())
+}
+
+
+
+model facility_gallery {
+  id             Int       @id @default(autoincrement())
+  title          String?   @db.VarChar(255)
+  category       String    @db.VarChar(100) 
+  sub_category   String?   @db.VarChar(100) 
+  image_url      String
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  sequence_order Int?      @default(0)
+}
+
+model event_gallery {
+  id             Int      @id @default(autoincrement())
+  title          String?  @db.VarChar(255)
+  category       String   @db.VarChar(100) // "Image Gallery", "Domestic Study Tour", "International Study Tour"
+  sub_category   String?  @db.VarChar(100)
+  year           String?  @default("2026") @db.VarChar(10) 
+  image_url      String   @db.VarChar(255)
+  sequence_order Int      @default(0)
+  created_at     DateTime @default(now())
+}
+
+model PopupEvent {
+  id           String   @id @default(uuid())
+  title        String
+  type         String
+  order        Int
+  icon         String   @default("🗕")
+  dateInfo     String
+  buttonText   String
+  contentType  String   // 'link' or 'content'
+  link         String?
+  discription  String?  @db.Text
+  images       String[] // Only accepts array of strings, NO nulls allowed
+  youtubeLinks Json?    // Stores array of YouTube URLs
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
